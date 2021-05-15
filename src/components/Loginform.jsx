@@ -23,7 +23,7 @@ const LoginForm = () => {
       localStorage.setItem("username", username);
       localStorage.setItem("password", password);
 
-      window.location.reaload();
+      window.location.reload();
     } catch (ex) {
       setError("Oops, incorrect credentials...", ex);
     }
