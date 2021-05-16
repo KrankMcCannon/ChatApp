@@ -6,11 +6,16 @@ const ChatFeed = (props) => {
   const { chats, activeChat, userName, messages } = props;
   const chat = chats && chats[activeChat];
 
-  const renderReadReceipts = (message, isMyMessage) => {
+  const renderReadReceipts = (message, isMyMessage, lastMessageKey) => {
+    const lastMessage = messages[lastMessageKey];
+    const isLastMessageByUser =
+      !lastMessage || lastMessage.sender.username === message.sender.username;
+
     return chat.people.map((person, index) => {
       if (
-        person.last_read === message.id &&
-        person.person.username !== chat.last_message.sender.username
+        isLastMessageByUser &&
+        person.person.username !== message.sender.username &&
+        person.person.is_online === true
       ) {
         return renderPallino(person, index, isMyMessage);
       }
@@ -57,14 +62,12 @@ const ChatFeed = (props) => {
               marginLeft: isMyMessage ? "0px" : "68px",
             }}
           >
-            {renderReadReceipts(message, isMyMessage)}
+            {renderReadReceipts(message, isMyMessage, lastMessageKey)}
           </div>
         </div>
       );
     });
   };
-
-  renderMessages();
 
   if (!chat) return "Loading...";
 
@@ -73,13 +76,13 @@ const ChatFeed = (props) => {
       <div className="chat-title-container">
         <div className="chat-title">{chat?.title}</div>
         <div className="chat-subtitle">
-          {chat.people.map((person) => `${person.person.username}`)}
+          - {chat.people.map((person) => `${person.person.username} - `)}
         </div>
       </div>
       {renderMessages()}
       <div style={{ height: "100px" }} />
       <div className="message-form-container">
-        <MessageForm {...props} chatId={activeChat} />
+        <MessageForm {...props} userName={userName} chatId={activeChat} />
       </div>
     </div>
   );
