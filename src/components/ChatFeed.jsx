@@ -4,19 +4,21 @@ import TheirMessage from "./TheirMessage";
 
 const ChatFeed = (props) => {
   const { chats, activeChat, userName, messages } = props;
-
   const chat = chats && chats[activeChat];
 
   const renderReadReceipts = (message, isMyMessage) => {
     return chat.people.map((person, index) => {
-      if (person.last_read === message.id) {
-        return renderPallino(index, person, isMyMessage);
+      if (
+        person.last_read === message.id &&
+        person.person.username !== chat.last_message.sender.username
+      ) {
+        return renderPallino(person, index, isMyMessage);
       }
       return null;
     });
   };
 
-  const renderPallino = (index, person, isMyMessage) => {
+  const renderPallino = (person, index, isMyMessage) => {
     return (
       <div
         key={`read_${index}`}
