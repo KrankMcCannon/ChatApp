@@ -13,8 +13,7 @@ const MessageForm = (props) => {
     if (text.length > 0) sendMessage(creds, chatId, { text });
 
     setValue("");
-
-    isTyping(props, chatId);
+    setTyping(false);
   };
   const handleChange = (event) => {
     setValue(event.target.value);
